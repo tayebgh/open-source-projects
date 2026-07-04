@@ -299,6 +299,13 @@ body.sponsor-banner-visible .drawer-overlay {
   top: var(--sponsor-banner-height, 40px);
 }
 
+/* When the sponsor banner is visible, offset the sticky site header so the two
+   sticky elements stack (banner on top, header directly beneath it) instead of
+   overlapping at the same top: 0. */
+body.sponsor-banner-visible .header {
+  top: var(--sponsor-banner-height, 40px);
+}
+
 .drawer.is-open {
   transform: translateX(0);
 }
@@ -4296,6 +4303,8 @@ html {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: slideDown 0.3s ease-out;
   height: auto;
+  /* Ensure no residual transform keeps the element non-sticky after the animation */
+  transform: none;
 }
 
 @keyframes slideDown {
@@ -4304,7 +4313,7 @@ html {
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: none;
     opacity: 1;
   }
 }
