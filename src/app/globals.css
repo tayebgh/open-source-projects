@@ -824,7 +824,7 @@ body.sponsor-banner-visible .header {
 .sponsor-highlight,
 .sponsor-availability {
   background: var(--ink) !important;
-  color: var(--background) !important;
+  color: var(--highlight-text) !important;
   border: 1px solid var(--ink) !important;
   border-radius: 0 !important;
   padding: 0.25rem 0.5rem !important;
@@ -7488,4 +7488,18 @@ html {
   .drawer-toggle {
     display: flex;
   }
+}
+
+/* Post detail sponsor pill: keep the black badge readable in the light theme. */
+.sponsored-project-section .sponsored-project-header .sponsored-badge {
+  background: #000000 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+.sponsored-project-section .sponsored-project-header .sponsored-badge *,
+.sponsored-project-section .sponsored-project-header .sponsored-badge i {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }

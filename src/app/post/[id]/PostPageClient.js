@@ -33,6 +33,15 @@ const getProjectTitle = (content) => {
   return cleanTitle.length > 80 ? cleanTitle.substring(0, 80) + '...' : cleanTitle;
 };
 
+const removeStandaloneRepositoryLine = (content) => {
+  if (!content) return content;
+
+  return content
+    .split('\n')
+    .filter((line) => !/^\s*(?:\*\*)?Repository(?:\*\*)?\s*:.*github\.com\/\S+/i.test(line))
+    .join('\n');
+};
+
 const extractTags = (content) => {
   // Extract hashtags from content
   const hashtagRegex = /#(\w+)/g;
@@ -811,7 +820,7 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
   const renderPostContent = (post) => {
     // Check if markdown_content exists and is not null
     if (post.markdown_content && post.markdown_content.trim() !== '') {
-      const processedMarkdown = processMarkdownContent(post.markdown_content);
+      const processedMarkdown = removeStandaloneRepositoryLine(processMarkdownContent(post.markdown_content));
       
       return (
         <div className="markdown-content">
@@ -880,7 +889,7 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
       );
     } else {
       // Fallback to original content formatting if no markdown_content
-      return formatContent(post.content);
+      return formatContent(removeStandaloneRepositoryLine(post.content));
     }
   };
 
@@ -1153,9 +1162,67 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
                 {allPosts.map((post, index) => (
                   <div key={post.id} className="content-section">
                     {index > 0 && <div className="section-divider"></div>}
-                    
-                    {/* Newsletter signup before second post */}
-                    {index === 1 && (
+
+                    <div className="section-content post-reader-content" style={{ '--post-text-scale': postTextScale }}>
+                      {renderPostContent(post)}
+                    </div>
+
+                    {/* Dynamic Sponsored Project - after the lead post */}
+                    {index === 0 && selectedSponsor && (
+                      <div className="sponsored-project-section">
+                        <div className="sponsored-project-header">
+                          <h3>
+                            <i className="fas fa-star"></i>
+                            Featured Sponsor
+                          </h3>
+                          <span className="sponsored-badge">
+                            <i className="fas fa-gem"></i>
+                            SPONSORED
+                          </span>
+                        </div>
+                        
+                        <div className="sponsored-project-card">
+                          <div className="sponsored-project-content">
+                            <div className="sponsored-project-header-content">
+                              <h4 className="sponsored-project-title">
+                                <a 
+                                  href={selectedSponsor.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {selectedSponsor.description}
+                                </a>
+                              </h4>
+                              <div className="sponsored-project-meta">
+                                <span className="sponsored-repo">
+                                  <i className="fab fa-github"></i>
+                                  {selectedSponsor.repo}
+                                </span>
+                              </div>
+                            </div>
+                            
+                            <p className="sponsored-project-description">
+                              {selectedSponsor.tagline}
+                            </p>
+
+                            <div className="sponsored-project-actions">
+                              <a 
+                                href={selectedSponsor.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="sponsored-cta-primary"
+                              >
+                                <span>Visit Sponsor</span>
+                                <i className="fas fa-arrow-right"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Newsletter signup after sponsored project */}
+                    {index === 0 && (
                       <div className="newsletter-inline-section">
                         <div className="newsletter-inline-box">
                           <div className="newsletter-inline-content">
@@ -1175,69 +1242,11 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
                         </div>
                       </div>
                     )}
-                    
-                    <div className="section-content post-reader-content" style={{ '--post-text-scale': postTextScale }}>
-                      {renderPostContent(post)}
-                    </div>
                   </div>
                 ))}
               </div>
 
               <div className="article-footer">
-               
-                {/* Dynamic Sponsored Project - Above sponsor promo */}
-                {selectedSponsor && (
-                  <div className="sponsored-project-section">
-                    <div className="sponsored-project-header">
-                      <h3>
-                        <i className="fas fa-star"></i>
-                        Featured Sponsor
-                      </h3>
-                      <span className="sponsored-badge">
-                        <i className="fas fa-gem"></i>
-                        SPONSORED
-                      </span>
-                    </div>
-                    
-                    <div className="sponsored-project-card">
-                      <div className="sponsored-project-content">
-                        <div className="sponsored-project-header-content">
-                          <h4 className="sponsored-project-title">
-                            <a 
-                              href={selectedSponsor.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {selectedSponsor.description}
-                            </a>
-                          </h4>
-                          <div className="sponsored-project-meta">
-                            <span className="sponsored-repo">
-                              <i className="fab fa-github"></i>
-                              {selectedSponsor.repo}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <p className="sponsored-project-description">
-                          {selectedSponsor.tagline}
-                        </p>
-
-                        <div className="sponsored-project-actions">
-                          <a 
-                            href={selectedSponsor.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="sponsored-cta-primary"
-                          >
-                            <span>Visit Sponsor</span>
-                            <i className="fas fa-arrow-right"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {/* Creative Sponsor Block - Only show when no active sponsor */}
                 {!selectedSponsor && (
@@ -3534,10 +3543,9 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
           display: flex;
           align-items: center;
           gap: 0.35rem;
-          background: transparent;
-          color: var(--muted-foreground, #8b949e);
-          padding: 0;
-          border-radius: 0;
+          background: #000000 !important;
+          color: #F2F8FC !important;
+          border-color: #000000 !important;
           font-family: var(--font-mono, monospace);
           font-size: 0.65rem;
           font-weight: 700;
