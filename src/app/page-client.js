@@ -642,11 +642,30 @@ export function HomePageContent() {
                 <React.Fragment key={`post-${post.id}-${index}`}>
                   {currentSponsor && (
                     <article key={`sponsor-${currentSponsor.id}`} className={`project-card sponsor-card ${getBentoClass(index)}`} style={{animationDelay: `${(index % 6) * 0.1}s`}}>
-                      <div className="card-header">
-                        <div className="card-meta">
-                          <span className="card-category sponsor-category">Sponsored Project</span>
-                          <span className="sponsor-highlight">Featured</span>
+                      <div className="sponsor-card-top">
+                        <div className="card-header">
+                          <div className="card-meta">
+                            <span className="card-category sponsor-category">Sponsored Project</span>
+                            <span className="sponsor-highlight">Featured</span>
+                          </div>
                         </div>
+
+                        {currentSponsor.image && (
+                          <a
+                            href={currentSponsor.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="sponsor-card-image"
+                            aria-label={currentSponsor.description}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={currentSponsor.image}
+                              alt={currentSponsor.description}
+                              loading="lazy"
+                            />
+                          </a>
+                        )}
                       </div>
 
                       <div className="card-content">
@@ -1096,6 +1115,59 @@ export function HomePageContent() {
           border-color: rgba(255, 107, 53, 0.5);
           transform: translateY(-5px);
           box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .sponsor-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: clamp(0.75rem, 2vw, 1.25rem);
+          margin-bottom: 1rem;
+        }
+
+        .sponsor-card-top .card-header {
+          flex: 0 0 30%;
+          max-width: 30%;
+        }
+
+        .sponsor-card-image {
+          display: block;
+          flex: 1 1 70%;
+          max-width: 70%;
+          aspect-ratio: 16 / 9;
+          margin: 0;
+          overflow: hidden;
+          border-radius: 12px;
+          background: var(--background);
+          box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+          text-decoration: none;
+        }
+
+        .sponsor-card-image img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .sponsor-card:hover .sponsor-card-image img {
+          transform: scale(1.05);
+        }
+
+        @media screen and (max-width: 640px) {
+          .sponsor-card-top {
+            flex-direction: column;
+            align-items: stretch;
+          }
+          .sponsor-card-top .card-header {
+            flex: 0 0 auto;
+            max-width: 100%;
+          }
+          .sponsor-card-image {
+            flex: 0 0 auto;
+            max-width: 100%;
+          }
         }
 
         .sponsor-category {

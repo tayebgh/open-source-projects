@@ -1217,6 +1217,22 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
                               </a>
                             </div>
                           </div>
+                          {selectedSponsor.image && (
+                            <a
+                              href={selectedSponsor.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="sponsored-project-media"
+                              aria-label={selectedSponsor.description}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={selectedSponsor.image}
+                                alt={selectedSponsor.description}
+                                loading="lazy"
+                              />
+                            </a>
+                          )}
                         </div>
                       </div>
                     )}
@@ -3559,9 +3575,10 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
 
         .sponsored-project-card {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
           justify-content: space-between;
           gap: clamp(1.25rem, 3vw, 2rem);
+          padding: clamp(1rem, 2vw, 1.5rem);
         }
 
         .sponsored-project-content {
@@ -3569,7 +3586,33 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
           flex-direction: column;
           gap: 1rem;
           min-width: 0;
+          flex: 1 1 60%;
           padding: 0.25rem;
+        }
+
+        .sponsored-project-media {
+          display: block;
+          flex: 0 0 40%;
+          max-width: 320px;
+          aspect-ratio: 16 / 9;
+          overflow: hidden;
+          border-radius: 12px;
+          background: var(--background, #0d1117);
+          box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+          text-decoration: none;
+          align-self: center;
+        }
+
+        .sponsored-project-media img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .sponsored-project-media:hover img {
+          transform: scale(1.04);
         }
 
         .sponsored-project-header-content {
@@ -3921,12 +3964,19 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
           .sponsored-project-card {
             flex-direction: column;
             gap: 1.25rem;
-            padding: 1.25rem;
+            padding: 0.5rem;
           }
 
           .sponsored-project-content {
             padding: 0;
             width: 100%;
+            flex: 1 1 100%;
+          }
+
+          .sponsored-project-media {
+            flex: 0 0 auto;
+            width: 100%;
+            max-width: 100%;
           }
 
           .sponsored-project-title {
