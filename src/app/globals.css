@@ -974,7 +974,7 @@ body.sponsor-banner-visible .header {
 }
 
 .sponsor-announcement-banner {
-  position: sticky !important;
+  position: fixed !important;
   top: 0 !important;
   z-index: 1001 !important;
   background: var(--ink) !important;
@@ -1298,6 +1298,10 @@ html {
     padding-top: 70px; /* Adjust for smaller mobile header */
   }
 
+  body.sponsor-banner-visible .main {
+    padding-top: calc(70px + var(--sponsor-banner-height, 40px));
+  }
+
   .nav {
     padding: 0 1rem;
   }
@@ -1330,6 +1334,10 @@ html {
 @media (max-width: 480px) {
   .main {
     padding-top: 60px; /* Smaller padding for small mobile */
+  }
+
+  body.sponsor-banner-visible .main {
+    padding-top: calc(60px + var(--sponsor-banner-height, 40px));
   }
 
   .header {
@@ -1392,6 +1400,10 @@ html {
     padding-top: 55px; /* Even smaller for tiny screens */
   }
 
+  body.sponsor-banner-visible .main {
+    padding-top: calc(55px + var(--sponsor-banner-height, 40px));
+  }
+
   .nav {
     padding: 0 0.5rem;
   }
@@ -1420,6 +1432,12 @@ html {
 .main {
   min-height: calc(100vh - 200px);
   padding-top: 80px; /* Account for fixed header */
+}
+
+/* When the sponsor banner is visible, push main content down by the banner
+   height so it isn't hidden behind the fixed banner. */
+body.sponsor-banner-visible .main {
+  padding-top: calc(80px + var(--sponsor-banner-height, 40px));
 }
 
 /* Container class for consistent padding */
@@ -3313,6 +3331,10 @@ html {
     padding-top: 55px; /* Even smaller for tiny screens */
   }
 
+  body.sponsor-banner-visible .main {
+    padding-top: calc(55px + var(--sponsor-banner-height, 40px));
+  }
+
   .nav {
     padding: 0 0.5rem;
   }
@@ -4292,7 +4314,7 @@ html {
 }
 /* ===== Sponsor Announcement Banner ===== */
 .sponsor-announcement-banner {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
