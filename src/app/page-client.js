@@ -28,7 +28,14 @@ export function HomePageContent() {
       const response = await fetch('/api/sponsors?active=true&shuffle=true');
       if (response.ok) {
         const data = await response.json();
-        setActiveSponsors(data.sponsors || []);
+        const sponsors = data.sponsors || [];
+        setActiveSponsors(sponsors);
+        // Record an impression (view) for each sponsor card shown
+        sponsors.forEach(sponsor => {
+          if (sponsor.id) {
+            fetch(`/api/sponsors?id=${encodeURIComponent(sponsor.id)}`, { method: 'PUT' }).catch(() => {});
+          }
+        });
       }
     } catch (error) {
       console.error('Failed to fetch sponsors:', error);

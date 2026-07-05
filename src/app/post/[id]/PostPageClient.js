@@ -151,9 +151,11 @@ export default function PostPageClient({ postDetails: initialPostDetails, params
           const sponsor = data.sponsors[0];
           setSelectedSponsor(sponsor);
           
-          // Record impression
+          // Record impression (view) for the sponsored_links tracking entry.
+          // PUT /api/sponsors?id={slug} is proxied by src/app/api/sponsors/route.js
+          // to the backend's /api/sponsored-links/{slug}/view endpoint.
           try {
-            await fetch(`/api/sponsors?id=${sponsor.id}`, { method: 'PUT' });
+            await fetch(`/api/sponsors?id=${encodeURIComponent(sponsor.id)}`, { method: 'PUT' });
           } catch (err) {
             console.warn('Failed to record sponsor impression:', err);
           }

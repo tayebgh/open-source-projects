@@ -4,10 +4,22 @@ const nextConfig = {
     domains: ['opengraph.githubassets.com'],
   },
   async rewrites() {
+    const backendUrl = process.env.BACKEND_URL || 'https://lb2-twitter-api.opensourceprojects.dev';
     return [
       {
         source: '/api/:path*',
-        destination: 'https://lb2-twitter-api.opensourceprojects.dev/:path*',
+        destination: `${backendUrl}/:path*`,
+      },
+      {
+        // Sponsored link click tracking — proxy /tracking/{slug} to the FastAPI
+        // backend, which counts the click and 302-redirects to the GitHub repo.
+        source: '/tracking/:slug',
+        destination: `${backendUrl}/tracking/:slug`,
+      },
+      {
+        // Public analytics page for sponsored links.
+        source: '/analytics/sponsored-links/:slug',
+        destination: `${backendUrl}/analytics/sponsored-links/:slug`,
       },
     ]
   },

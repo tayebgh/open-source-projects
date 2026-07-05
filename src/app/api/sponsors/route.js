@@ -47,15 +47,17 @@ export async function PUT(request) {
       );
     }
 
-    const res = await fetch(`${BACKEND_URL}/api/active-sponsors/${encodeURIComponent(sponsorId)}/impression`, {
+    // Increment views on the sponsored_links tracking entry (in-house analytics).
+    // The sponsorId is the slug used as the sponsored_links key.
+    const res = await fetch(`${BACKEND_URL}/api/sponsored-links/${encodeURIComponent(sponsorId)}/view`, {
       method: 'PUT',
     });
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('Backend impression increment failed:', res.status, errorText);
+      console.error('Backend sponsored-links view increment failed:', res.status, errorText);
       return NextResponse.json(
-        { success: false, error: 'Failed to record impression', details: errorText },
+        { success: false, error: 'Failed to record view', details: errorText },
         { status: res.status }
       );
     }
@@ -65,7 +67,7 @@ export async function PUT(request) {
   } catch (error) {
     console.error('Error proxying sponsors PUT:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to record impression', details: error.message },
+      { success: false, error: 'Failed to record view', details: error.message },
       { status: 500 }
     );
   }
