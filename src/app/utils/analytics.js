@@ -1,6 +1,6 @@
 // Google Analytics tracking utilities
 
-export const GA_TRACKING_ID = 'G-PM4NQK4MYG';
+export const GA_TRACKING_ID = 'G-H2NJ3HVX82';
 
 // Track custom events
 export const trackEvent = (action, category, label = '', value = 0, additional_parameters = {}) => {
